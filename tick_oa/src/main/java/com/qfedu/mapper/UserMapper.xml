@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.dao.UserDao">
+	<resultMap id="userMap" type="User">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="no" jdbcType="VARCHAR" property="no" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="flag" jdbcType="INTEGER" property="flag" />
+		<result column="headphoto" jdbcType="VARCHAR" property="headphoto"/>
+	</resultMap>
+
+	<select id="findByNo" parameterType="string" resultMap="userMap">
+		select * from t_user where no=#{no}
+	</select>
+	
+	<select id="findQXByUserNo" parameterType="string" resultType="map" >
+		SELECT a.id, a.aicon as icon,a.title,a1.parentId,a1.aurl as paurl,a1.title as ptitle from t_user u
+			INNER JOIN t_userrole ur
+			ON u.id=ur.uid
+			inner join t_role r
+			on ur.rid=r.id 
+			INNER JOIN t_roleauthority rt
+			on r.id=rt.rid
+			INNER JOIN t_authority a
+			on rt.aid=a.id
+			right JOIN t_authority a1
+			on a.id=a1.parentId
+			where u.no=#{no}
+		
+	</select>
+	
+	<select id="findAllUserByCPageAndSize" parameterType="map" resultType="map" >
+		select u.id, u.no, u.name, r.info as role, u.flag from t_user u
+		inner JOIN t_userrole ur
+		on u.id=ur.uid
+		inner join t_role r
+		on ur.rid=r.id limit #{curPage}, #{size}
+	</select>
+	
+	<select id="findAllUserByCompilePage" resultType="map">
+		select * from t_role
+	</select>
+	<select id="countToUser" resultType="int" >
+	 	select count(1) from t_user
+	</select>
+	
+	<select id="findUserRoleByUserId" parameterType="int" resultType="map">
+		select * from t_user u
+		inner join t_userrole r
+		on u.id=r.uid
+		where u.id=#{id}
+	</select>
+	
+</mapper>

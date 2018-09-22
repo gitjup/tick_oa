@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qfedu.dao.UserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.qfedu.entity.UserRoleKey">
+    <id column="uid" jdbcType="INTEGER" property="uid" />
+    <id column="rid" jdbcType="INTEGER" property="rid" />
+  </resultMap>
+  
+  <delete id="deleteRoleAuth" parameterType="map">
+ 		delete from t_roleauthority where rid=#{id} and aid in
+ 		<foreach collection="list" item="item" open="(" close=")" separator="," >
+ 			#{item.aid}
+ 		</foreach>
+ 	</delete>
+</mapper>
